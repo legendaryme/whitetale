@@ -9,6 +9,9 @@ public class Renderer extends JPanel{
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        WhiteTale.wt.repaint(g);
+        if (WhiteTale.wt != null){
+            WhiteTale.wt.render(g);
+        }
+        WhiteTale.wt.render(g);
     }
 }
