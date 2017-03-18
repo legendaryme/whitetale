@@ -1,4 +1,4 @@
-package whiteTale;
+package whiteTile;
 
 import javax.swing.*;
 import java.awt.*;
@@ -6,18 +6,17 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Random;
 
 /**
  * Created on 18/03/2017.
  */
-public class WhiteTale implements ActionListener, MouseListener {
+public class WhiteTile implements ActionListener, MouseListener {
 
     public final static int TILE_WIDTH = 250, TILE_HEIGHT = 250;
 
-    public static WhiteTale dttwt;
+    public static WhiteTile dttwt;
 
     public ArrayList<Tile> tiles;
 
@@ -29,7 +28,7 @@ public class WhiteTale implements ActionListener, MouseListener {
 
     public boolean delay;
 
-    public WhiteTale(){
+    public WhiteTile(){
 
         JFrame frame = new JFrame("White tale");
 
@@ -84,7 +83,7 @@ public class WhiteTale implements ActionListener, MouseListener {
 
     public static void main(String[] args) {
 
-        dttwt = new WhiteTale();
+        dttwt = new WhiteTile();
     }
 
 
