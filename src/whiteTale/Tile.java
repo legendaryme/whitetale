@@ -1,8 +1,5 @@
-package whiteTile;
+package whiteTale;
 
-/**
- * Created on 18/03/2017.
- */
 public class Tile {
 
     public int x, y;
@@ -17,8 +14,8 @@ public class Tile {
     }
 
     public boolean pointInTile(int x, int y){
-        int width = WhiteTile.TILE_WIDTH;
-        int height = WhiteTile.TILE_HEIGHT;
+        int width = WhiteTale.TILE_WIDTH;
+        int height = WhiteTale.TILE_HEIGHT;
         return x > this.x * width && x < this.x * width + width && y > this.y * height && y < this.y * height + height;
     }
 }

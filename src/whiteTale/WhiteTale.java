@@ -1,4 +1,4 @@
-package whiteTile;
+package whiteTale;
 
 import javax.swing.*;
 import java.awt.*;
@@ -9,26 +9,23 @@ import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.Random;
 
-/**
- * Created on 18/03/2017.
- */
-public class WhiteTile implements ActionListener, MouseListener {
+public class WhiteTale implements ActionListener, MouseListener {
 
     public final static int COLUMNS = 3, ROWS = 3, TILE_WIDTH = 250, TILE_HEIGHT = 300;
 
-    public static WhiteTile dttwt;
+    public static WhiteTale wt;
 
     public ArrayList<Tile> tiles;
 
     public Renderer renderer;
 
+    public boolean gameOver;
+
     public Random random;
 
     public int score, milSecDelay;
 
-    public boolean delay;
-
-    public WhiteTile(){
+    public WhiteTale() {
 
         JFrame frame = new JFrame("White tale");
 
@@ -38,9 +35,12 @@ public class WhiteTile implements ActionListener, MouseListener {
         renderer = new Renderer();
         random = new Random();
 
-        frame.setSize(TILE_WIDTH*3,TILE_HEIGHT*3);
+        frame.setSize(TILE_WIDTH * COLUMNS, TILE_HEIGHT * ROWS);
+        frame.add(renderer);
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.addMouseListener(this);
+        frame.setResizable(false);
 
         start();
         timer.start();
@@ -51,26 +51,19 @@ public class WhiteTile implements ActionListener, MouseListener {
         gameOver = false;
         tiles = new ArrayList<Tile>();
 
-        for (int x = 0; x < COLUMNS; x++)
-        {
-            for (int y = 0; y < ROWS; y++)
-            {
+        for (int x = 0; x < COLUMNS; x++) {
+            for (int y = 0; y < ROWS; y++) {
                 boolean canBeBlack = true;
 
-                for (Tile tile : tiles)
-                {
-                    if (tile.y == y && tile.black)
-                    {
+                for (Tile tile : tiles) {
+                    if (tile.y == y && tile.black) {
                         canBeBlack = false;
                     }
                 }
 
-                if (!canBeBlack)
-                {
+                if (!canBeBlack) {
                     tiles.add(new Tile(x, y, false));
-                }
-                else
-                {
+                } else {
                     tiles.add(new Tile(x, y, random.nextInt(2) == 0 || x == 2));
                 }
             }
@@ -108,8 +101,7 @@ public class WhiteTile implements ActionListener, MouseListener {
 
             g.setColor(Color.RED);
             g.drawString(String.valueOf(score), TILE_WIDTH, 100);
-        }
-        else {
+        } else {
             g.setColor(Color.BLACK);
             g.drawString("Game Over!", 100, TILE_HEIGHT);
         }
@@ -117,7 +109,7 @@ public class WhiteTile implements ActionListener, MouseListener {
 
     public static void main(String[] args) {
 
-        dttwt = new WhiteTile();
+        wt = new WhiteTale();
     }
 
 
@@ -126,27 +118,66 @@ public class WhiteTile implements ActionListener, MouseListener {
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        for (int i = 0; i < tiles.size(); i++){
-            Tile tile = tiles.get(i);
 
-            if (tile.pointInTile(e.getX(), e.getY())){
-                if (tile.black){
-                    tile.animateY -= TILE_HEIGHT;
-                    tile.y++;
-
-                    for
-
-                }
-                else {
-                    gameOver = true;
-                }
-            }
-        }
     }
 
     @Override
     public void mousePressed(MouseEvent e) {
+        boolean clicked = false;
 
+        if (!gameOver) {
+            for (int i = 0; i < tiles.size(); i++) {
+                Tile tile = tiles.get(i);
+
+                if (tile.pointInTile(e.getX(), e.getY()) && !clicked) {
+                    if (e.getY() > TILE_HEIGHT * (ROWS - 1)) {
+                        if (tile.black) {
+                            for (int j = 0; j < tiles.size(); j++) {
+                                if (tiles.get(j).y == ROWS) {
+                                    tiles.remove(j);
+                                }
+
+                                tiles.get(j).y++;
+                                tiles.get(j).animateY -= TILE_HEIGHT;
+                            }
+
+                            score += Math.max(100 - milSecDelay, 10);
+
+                            System.out.println("You've scored " + Math.max(100 - milSecDelay, 10) + " points!");
+
+                            milSecDelay = 0;
+
+                            boolean canBeBlack = true;
+
+                            for (int x = 0; x < COLUMNS; x++) {
+                                boolean black = random.nextInt(2) == 0 || x == COLUMNS - 1;
+
+                                Tile newTile = null;
+
+                                if (canBeBlack && black) {
+                                    newTile = new Tile(x, 0, true);
+                                    canBeBlack = false;
+                                } else {
+                                    newTile = new Tile(x, 0, false);
+                                }
+
+                                newTile.animateY -= TILE_HEIGHT;
+
+                                tiles.add(newTile);
+                            }
+                        } else {
+                            gameOver = true;
+                        }
+
+                        clicked = true;
+                    } else {
+                        gameOver = true;
+                    }
+                }
+            }
+        } else {
+            start();
+        }
     }
 
     @Override
